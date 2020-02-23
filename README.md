@@ -1,7 +1,7 @@
 # A4 COMP3430
 
-author:     Pylypenko Maksym 7802672
-date:       2018-07-13
+* author:     Pylypenko Maksym 7802672
+* date:       2018-07-13
 
 ## To compile :
 > make 
