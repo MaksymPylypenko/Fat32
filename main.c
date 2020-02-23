@@ -1,5 +1,5 @@
 // author:            Pylypenko Maksym 7802672
-// last change:       2018-July-11
+// last change:       2018-July-13
 
 #include <stdio.h> // default
 #include <stdlib.h> // sizeof
@@ -40,10 +40,10 @@ int main( int argc, char *argv[] ) {
   char * path = "FOLDER1/FOLDER2/FOLDER3/THEFILE.TXT";
   fileName = "a4image";
   
-  // if( argc > 0 ) 
-  // {
-	//   fileName = argv[1]; // voume name
-  // }
+  if( argc > 0 ) 
+  {
+	fileName = argv[1]; // voume name
+  }
     
   BPB = malloc(512);    
   info = malloc(512);   
@@ -60,32 +60,31 @@ int main( int argc, char *argv[] ) {
   // Data Area
   dataSector = fatSector + (BPB->BPB_NumFATs * BPB->BPB_FATSz32 );   
   int root = BPB->BPB_RootClus; 
-  readSector(root,0);
+
   
-  // if ( argc > 1 ) 
-  // {
-	//  if(strcmp(argv[2],"info")==0)
-	//  {
-	// 	print_info();
-	//  }
-	//  else if(strcmp(argv[2],"list")==0)
-	//  {
-	//     //Recursively read the root sector   
-	// 	readSector(root,0);
-	//  }
-	//  else if(strcmp(argv[2],"get")==0)
-	//  {
-	// 	if( argc > 2)
-	// 	{
-	// 		path = argv[3];
+  if ( argc > 1 ) 
+  {
+	 if(strcmp(argv[2],"info")==0)
+	 {
+		print_info();
+	 }
+	 else if(strcmp(argv[2],"list")==0)
+	 {
+	    //Recursively read the root sector   
+		readSector(root,0);
+	 }
+	 else if(strcmp(argv[2],"get")==0)
+	 {
+		if( argc > 2)
+		{
+			path = argv[3];
 			
-	// 		//Recursively read the root sector   
-	// 		fetch(root,path);
-	// 	}
-	//  }	 
-  // }    
+			//Recursively read the root sector   
+			fetch(root,path);
+		}
+	 }	 
+  }    
   
-  readSector(root,0);
   
   close(image);     
   return 0;
@@ -95,6 +94,7 @@ int main( int argc, char *argv[] ) {
 // ------------------- CORE METHODS -------------------
 
 // Recursively reads sector 
+// Note, that we need the first cluster to properly read a sector  
 void readSector(int cluster,int depth)
 {    
   uint32_t sector = ((cluster - 2) * BPB->BPB_SecPerClus) + dataSector;
